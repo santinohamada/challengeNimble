@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { fetchCandidate, fetchJobs, applyJob } from '../lib/api';
+import { fetchCandidate, fetchJobs, applyJob } from './lib/api';
 import type { Candidate, Job } from './types';
 import CandidateForm from './components/CandidateForm';
 import JobList from './components/JobList';
+import { formatApiError } from './lib/utils';
 
 export default function App() {
   const [candidate, setCandidate] = useState<Candidate | null>(null);
@@ -20,13 +21,15 @@ export default function App() {
     setLoading(true);
     setError('');
     try { setCandidate(await fetchCandidate(email)); }
-    catch (err: any) { setError('Error: ' + err.message); }
+    catch (err: any) {
+      setError(formatApiError(err));
+    }
     setLoading(false);
   };
 
   const handleApply = async (jobId: string, repoUrl: string) => {
     if (!candidate) return;
-    await applyJob(candidate.uuid, jobId, candidate.candidateId, repoUrl);
+    await applyJob(candidate.uuid, jobId, candidate.candidateId, repoUrl, candidate.applicationId);
   };
   console.log(candidate, jobs)
   return (
@@ -46,7 +49,7 @@ export default function App() {
 
         {/* Error */}
         {error && (
-          <div className="border border-red-200 bg-red-50 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
+          <div className="mt-3 p-3 rounded-md text-sm font-medium border bg-red-50 text-red-700 border-red-200">
             {error}
           </div>
         )}
