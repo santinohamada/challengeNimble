@@ -1,4 +1,4 @@
-import type { Candidate, Job, ApplyResponse } from '../src/types';
+import type { Candidate, Job, ApplyResponse } from '../types';
 
 const BASE_URL = 'https://botfilter-h5ddh6dye8exb7ha.centralus-01.azurewebsites.net';
 
@@ -15,12 +15,12 @@ export const fetchJobs = async (): Promise<Job[]> => {
 };
 
 export const applyJob = async (
-  uuid: string, jobId: string, candidateId: string, repoUrl: string
+  uuid: string, jobId: string, candidateId: string, repoUrl: string, applicationId: string
 ): Promise<ApplyResponse> => {
   const res = await fetch(`${BASE_URL}/api/candidate/apply-to-job`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ uuid, jobId, candidateId, repoUrl })
+    body: JSON.stringify({ uuid, jobId, candidateId, repoUrl, applicationId })
   });
   if (!res.ok) throw new Error(await res.text() || 'Error enviando postulación');
   return res.json();
