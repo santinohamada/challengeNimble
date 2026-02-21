@@ -1,73 +1,119 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Nimble Gravity Challenge — Frontend
 
-Currently, two official plugins are available:
+Aplicación frontend desarrollada en React como resolución del challenge técnico para el rol de Junior Fullstack Developer en Nimble Gravity.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+La aplicación consume la API provista para validar un candidato mediante email, obtener posiciones abiertas y permitir el envío de una postulación incluyendo la URL del repositorio del proyecto.
 
-## React Compiler
+ 
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Descripción
 
-## Expanding the ESLint configuration
+El objetivo del proyecto es implementar una interfaz simple y clara que permita:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Obtener los datos del candidato desde la API mediante su email.
+- Listar las posiciones disponibles.
+- Permitir ingresar la URL del repositorio asociado a la postulación.
+- Enviar la postulación a la API.
+- Manejar estados de carga y errores de red en la interfaz.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+El foco del desarrollo estuvo en la claridad del código, separación de responsabilidades y manejo correcto del flujo de datos.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+ 
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Tecnologías utilizadas
+
+- React
+- TypeScript
+- Vite
+- Fetch API
+- TailwindCSS
+
+
+
+## Instalación y ejecución local
+
+### Requisitos previos
+
+- Node.js 18 o superior
+- npm o yarn
+
+### Clonar repositorio
+
+```bash
+git clone https://github.com/TU-USUARIO/TU-REPO
+cd TU-REPO
+````
+
+### Instalar dependencias
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Ejecutar en entorno de desarrollo
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+La aplicación estará disponible en:
+
+```
+http://localhost:5173
+```
+
+
+
+## Flujo de la aplicación
+
+1. El usuario ingresa su email.
+2. La aplicación consulta la API y obtiene los datos del candidato.
+3. Se listan las posiciones abiertas.
+4. El usuario ingresa la URL del repositorio.
+5. Se envía la postulación mediante POST.
+6. La interfaz muestra feedback de éxito o error según la respuesta.
+
+
+## Estructura del proyecto
+
+```
+src/
+ ├── components/     Componentes de UI reutilizables
+ ├── lib/            Lógica de acceso a API y utilidades
+ ├── types/          Definiciones de tipos TypeScript
+ ├── App.tsx         Componente raíz de la aplicación
+```
+
+La organización busca mantener separada la lógica de red, la representación visual y los tipos del dominio.
+
+ 
+
+## Decisiones técnicas
+
+* Se utilizó estado local con hooks dado el alcance acotado del challenge.
+* Se separó la lógica de acceso a la API en módulos independientes.
+* Se implementó parseo de errores de la API para mostrar mensajes claros al usuario.
+* Se evitó incorporar librerías adicionales para mantener la solución simple y enfocada.
+* Se priorizó legibilidad y mantenimiento del código por sobre optimizaciones prematuras.
+
+ 
+
+## Posibles mejoras
+
+En un entorno productivo podrían incorporarse:
+
+* Validaciones más robustas del repositorio ingresado.
+* Tests unitarios y de integración.
+* Manejo global de errores.
+* Persistencia de sesión del candidato.
+* Feedback visual adicional en el proceso de envío.
+* Configuración de variables de entorno para la URL de la API.
+
+ 
+
+## Autor
+| Colaborador                                | Perfil                                       |
+|              --|               -|
+| ![Santino Hamada](https://github.com/santinohamada.png) | [Santino Hamada](https://github.com/santinohamada) |
+
