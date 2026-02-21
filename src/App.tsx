@@ -1,35 +1,85 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { fetchCandidate, fetchJobs, applyJob } from '../lib/api';
+import type { Candidate, Job } from './types';
+import CandidateForm from './components/CandidateForm';
+import JobList from './components/JobList';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [candidate, setCandidate] = useState<Candidate | null>(null);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    fetchJobs()
+      .then(setJobs)
+      .catch(err => setError('Fallo al cargar empleos: ' + err.message));
+  }, []);
+
+  const handleFetchCandidate = async (email: string) => {
+    setLoading(true);
+    setError('');
+    try { setCandidate(await fetchCandidate(email)); }
+    catch (err: any) { setError('Error: ' + err.message); }
+    setLoading(false);
+  };
+
+  const handleApply = async (jobId: string, repoUrl: string) => {
+    if (!candidate) return;
+    await applyJob(candidate.uuid, jobId, candidate.candidateId, repoUrl);
+  };
+  console.log(candidate, jobs)
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="min-h-screen bg-neutral-50 text-neutral-900">
 
-export default App
+      <main className="max-w-3xl mx-auto px-6 py-16">
+
+        {/* Header */}
+        <header className="mb-12">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Tech Recruiting
+          </h1>
+          <p className="text-neutral-500 mt-2 text-sm">
+            Postulate a posiciones técnicas en segundos.
+          </p>
+        </header>
+
+        {/* Error */}
+        {error && (
+          <div className="border border-red-200 bg-red-50 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* Candidate */}
+        {!candidate ? (
+          <div className="bg-white border border-neutral-200 rounded-xl p-6 mb-8">
+            <CandidateForm
+              onFetchCandidate={handleFetchCandidate}
+              loading={loading}
+            />
+          </div>
+        ) : (
+          <div className="bg-white border border-neutral-200 rounded-xl p-5 mb-8 flex items-center justify-between">
+            <div className="text-sm">
+              <span className="text-neutral-500">Validado como</span>
+              <div className="font-medium">
+                {candidate.firstName} {candidate.lastName}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Jobs */}
+        <section className="space-y-4">
+          <JobList
+            jobs={jobs}
+            candidate={candidate}
+            onApply={handleApply}
+          />
+        </section>
+
+      </main>
+    </div>
+  );
+}
